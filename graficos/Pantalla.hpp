@@ -35,9 +35,8 @@ public:
     void crear_ventana(std::string titulo_ventana, uint16_t ancho,uint16_t alto);
     void crear_renderizador(uint32_t banderas);
     void establecer_icono(std::string icono_png);
-    bool mantener_abierta();
     void presentar_renderizador();
-    void manejar_eventos();
+    bool manejar_eventos();
     void crear_textura(std::string nombre,int alto, int ancho);
     void finalizar_textura();
     void dibujar_textura(std::string nombre);
@@ -92,7 +91,7 @@ void Pantalla::crear_renderizador(uint32_t banderas){
     }
     
 }
-void Pantalla::manejar_eventos(){
+bool Pantalla::manejar_eventos(){
     SDL_Event evento_actual;
     while (SDL_PollEvent(&evento_actual))
     {
@@ -101,6 +100,7 @@ void Pantalla::manejar_eventos(){
             this->cerrar = true;
         }
     }
+    return !cerrar;
 }
 void Pantalla::crear_textura(std::string nombre,int alto, int ancho){
     this->texturas[nombre] = SDL_CreateTexture(this->renderizador,SDL_PIXELFORMAT_RGBA8888,SDL_TEXTUREACCESS_TARGET,ancho,alto);
@@ -123,9 +123,6 @@ void Pantalla::crear_ventana(std::string titulo_ventana, uint16_t ancho,uint16_t
         this->~Pantalla();
         return;
     }
-}
-bool Pantalla::mantener_abierta(){
-    return !cerrar;
 }
 
 void Pantalla::presentar_renderizador(){
