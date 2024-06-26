@@ -37,6 +37,7 @@ public:
     void establecer_icono(std::string icono_png);
     void presentar_renderizador();
     bool manejar_eventos();
+    bool manejar_eventos(void (*funcion_eventos)(SDL_Event&));
     void crear_textura(std::string nombre,int alto, int ancho);
     void finalizar_textura();
     void dibujar_textura(std::string nombre);
@@ -58,9 +59,10 @@ public:
     void dimensiones(int* ancho,int* alto);
     ~Pantalla();
 };
-Pantalla::Pantalla():cerrar(false){
+Pantalla::Pantalla(){
     SDL_SetHint(SDL_HINT_VIDEO_X11_NET_WM_BYPASS_COMPOSITOR, "0");
     if (SDL_Init(SDL_INIT_VIDEO) != 0){std::cerr << "Error al iniciar el video" << std::endl;}
+    cerrar = false;
 }
 void Pantalla::Iniciar_ttf(){
     if (TTF_Init() < 0) {
@@ -90,6 +92,18 @@ void Pantalla::crear_renderizador(uint32_t banderas){
         return;
     }
     
+}
+bool Pantalla::manejar_eventos(void (*funcion_eventos)(SDL_Event& evento)){
+    SDL_Event evento_actual;
+    while (SDL_PollEvent(&evento_actual))
+    {
+        if (evento_actual.type == SDL_QUIT)
+        {   
+            this->cerrar = true;
+        }
+        funcion_eventos(evento_actual);
+    }
+    return !cerrar;
 }
 bool Pantalla::manejar_eventos(){
     SDL_Event evento_actual;
