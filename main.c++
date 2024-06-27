@@ -23,9 +23,9 @@ Pantalla Ventana;
 std::map<std::string,Color*> colores;
     std::vector<std::string> codcolor;
 std::vector<std::vector<int>> microfono{
-    {600,300},
-    {400,500},
-    {800,500}
+    {600,400},
+    {500,500},
+    {700,500}
 };
 
 int main(){
@@ -39,6 +39,7 @@ int main(){
     colores["Azul"] =  new Color(30,80,155);
     colores["Rojo"] =  new Color(155,0,0);
     colores["Ambar"] =  new Color(255,191,0);
+    colores["Rosa"] =  new Color(155,100,100);
 
     codcolor.push_back("Verde");
     codcolor.push_back("Azul");
@@ -64,6 +65,7 @@ void eventos(SDL_Event& evento_actual){
         int x;
         int y;
         float diferencia;
+        float color_count = 0;
     switch (evento_actual.type)
     {
     case SDL_MOUSEBUTTONDOWN:
@@ -77,7 +79,8 @@ void eventos(SDL_Event& evento_actual){
         {
             for (int u = 0; u < microfono.size(); u++)
             {
-                if (u != i ){
+                if (u >= i ){
+                        color_count ++;
                         float dx1 = x - microfono[i][0];
                         float dy1 = y - microfono[i][1];
                         float distancia1 = sqrt(dx1 * dx1 + dy1 * dy1);
@@ -86,7 +89,7 @@ void eventos(SDL_Event& evento_actual){
                         float dy2 = y - microfono[u][1];
                         float distancia2 = sqrt(dx2 * dx2 + dy2 * dy2);
                     diferencia = distancia2-distancia1;
-                    plot_hyperbola(i,u,diferencia,100,*colores[codcolor[u]]);                   
+                    plot_hyperbola(i,u,diferencia,300,*colores["Rosa"]);                   
                 }
             }
             
@@ -123,12 +126,9 @@ void plot_hyperbola(int mic1, int mic2, float delta_d, int num_points,Color& col
     //Ventana.dibujar_circunferencia(x1,y1,20,*colores["Verde"]);
     //Ventana.dibujar_circunferencia(x2,y2,15,*colores["Azul"]);
     std::vector<Point> Hyperbola;
-    if (delta_d > 0)
-    {
-        Hyperbola = generate_hyperbola_points(foco1,foco2,delta_d,100);
-    }else{
+    
         Hyperbola = generate_hyperbola_points(foco2,foco1,delta_d,100);
-    }
+    
     
     
     //
